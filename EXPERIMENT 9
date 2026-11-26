@@ -1,0 +1,93 @@
+# Compare Linear and Polynomial Regression
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Create Dataset
+X = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]).reshape(-1, 1)
+
+y = np.array([2, 5, 10, 17, 26, 37, 50, 65, 82, 101])
+
+# Linear Regression
+linear_model = LinearRegression()
+linear_model.fit(X, y)
+
+linear_pred = linear_model.predict(X)
+
+# Polynomial Regression
+poly = PolynomialFeatures(degree=2)
+X_poly = poly.fit_transform(X)
+
+poly_model = LinearRegression()
+poly_model.fit(X_poly, y)
+
+poly_pred = poly_model.predict(X_poly)
+
+# Calculate Performance
+linear_mse = mean_squared_error(y, linear_pred)
+poly_mse = mean_squared_error(y, poly_pred)
+
+linear_r2 = r2_score(y, linear_pred)
+poly_r2 = r2_score(y, poly_pred)
+
+# Display Results
+print("LINEAR REGRESSION")
+print("Mean Squared Error:", linear_mse)
+print("R2 Score:", linear_r2)
+
+print("\nPOLYNOMIAL REGRESSION")
+print("Mean Squared Error:", poly_mse)
+print("R2 Score:", poly_r2)
+
+# Compare Graphs
+plt.figure(figsize=(10, 5))
+
+plt.scatter(X, y, color='blue', label='Actual Data')
+
+plt.plot(X, linear_pred, color='red',
+         label='Linear Regression')
+
+plt.plot(X, poly_pred, color='green',
+         label='Polynomial Regression')
+
+plt.title("Linear vs Polynomial Regression")
+plt.xlabel("X Values")
+plt.ylabel("Y Values")
+
+plt.legend()
+plt.grid()
+plt.show()
+
+# Predict New Value
+new_value = np.array([[11]])
+
+linear_result = linear_model.predict(new_value)
+
+poly_new = poly.transform(new_value)
+poly_result = poly_model.predict(poly_new)
+
+print("\nPrediction for X = 11")
+print("Linear Regression:", linear_result[0])
+print("Polynomial Regression:", poly_result[0])
+
+print("\nComparison Completed Successfully!")
+
+output:
+
+LINEAR REGRESSION
+Mean Squared Error: Approximately 35.43
+R2 Score: Approximately 0.96
+
+POLYNOMIAL REGRESSION
+Mean Squared Error: Approximately 0.0
+R2 Score: 1.0
+
+Prediction for X = 11
+Linear Regression: Approximately 115.0
+Polynomial Regression: 122.0
+
+Comparison Completed Successfully!
