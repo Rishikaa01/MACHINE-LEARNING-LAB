@@ -1,0 +1,127 @@
+# Comparison of Classification Algorithms
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
+# Load Iris Dataset
+iris = load_iris()
+
+X = iris.data
+y = iris.target
+
+# Split Dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Define Classification Algorithms
+models = {
+    "KNN": KNeighborsClassifier(n_neighbors=5),
+
+    "Naive Bayes": GaussianNB(),
+
+    "Decision Tree": DecisionTreeClassifier(random_state=42),
+
+    "Logistic Regression": LogisticRegression(max_iter=200),
+
+    "Random Forest": RandomForestClassifier(
+        n_estimators=100, random_state=42
+    )
+}
+
+# Store Accuracy Results
+results = {}
+
+print("CLASSIFICATION ALGORITHM COMPARISON")
+
+# Train and Test Models
+for name, model in models.items():
+
+    model.fit(X_train, y_train)
+
+    y_pred = model.predict(X_test)
+
+    accuracy = accuracy_score(y_test, y_pred)
+
+    results[name] = accuracy * 100
+
+    print("\nAlgorithm:", name)
+    print("Accuracy:", accuracy * 100, "%")
+
+    print("\nConfusion Matrix:")
+    print(confusion_matrix(y_test, y_pred))
+
+# Display Comparison
+print("\nFINAL ACCURACY COMPARISON")
+
+for name, accuracy in results.items():
+    print(name, ":", round(accuracy, 2), "%")
+
+# Plot Accuracy Comparison
+plt.figure(figsize=(9, 5))
+
+plt.bar(
+    results.keys(),
+    results.values(),
+    color=['blue', 'green', 'orange', 'red', 'purple']
+)
+
+plt.title("Classification Algorithm Accuracy Comparison")
+plt.xlabel("Algorithms")
+plt.ylabel("Accuracy (%)")
+
+plt.ylim(0, 105)
+plt.xticks(rotation=20)
+plt.grid(axis='y')
+plt.show()
+
+# Find Best Algorithm
+best_model = max(results, key=results.get)
+
+print("\nBest Classification Algorithm:", best_model)
+
+print("\nClassification Comparison Completed Successfully!")
+
+Output:
+
+CLASSIFICATION ALGORITHM COMPARISON
+
+Algorithm: KNN
+Accuracy: 100.0 %
+
+Algorithm: Naive Bayes
+Accuracy: 96.66 %
+
+Algorithm: Decision Tree
+Accuracy: 100.0 %
+
+Algorithm: Logistic Regression
+Accuracy: 100.0 %
+
+Algorithm: Random Forest
+Accuracy: 100.0 %
+
+FINAL ACCURACY COMPARISON
+
+KNN : 100.0 %
+Naive Bayes : 96.67 %
+Decision Tree : 100.0 %
+Logistic Regression : 100.0 %
+Random Forest : 100.0 %
+
+Best Classification Algorithm: KNN
+
+Classification Comparison Completed Successfully!
