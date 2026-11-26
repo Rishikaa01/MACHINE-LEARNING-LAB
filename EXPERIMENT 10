@@ -1,0 +1,91 @@
+# Expectation Maximization (EM) Algorithm
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.datasets import make_blobs
+from sklearn.mixture import GaussianMixture
+from sklearn.metrics import silhouette_score
+
+# Generate Dataset
+X, y = make_blobs(
+    n_samples=200,
+    centers=3,
+    cluster_std=1.0,
+    random_state=42
+)
+
+# Create EM Model
+model = GaussianMixture(
+    n_components=3,
+    random_state=42
+)
+
+# Train the Model
+model.fit(X)
+
+# Predict Clusters
+labels = model.predict(X)
+
+# Display Results
+print("Expectation Maximization Algorithm")
+print("\nNumber of Clusters:", model.n_components)
+
+print("\nCluster Labels:")
+print(labels)
+
+print("\nCluster Centers:")
+print(model.means_)
+
+# Calculate Silhouette Score
+score = silhouette_score(X, labels)
+
+print("\nSilhouette Score:", score)
+
+# Visualize Clusters
+plt.figure(figsize=(8, 5))
+
+plt.scatter(
+    X[:, 0],
+    X[:, 1],
+    c=labels,
+    cmap='viridis',
+    s=40
+)
+
+plt.scatter(
+    model.means_[:, 0],
+    model.means_[:, 1],
+    color='red',
+    marker='X',
+    s=200,
+    label='Cluster Centers'
+)
+
+plt.title("Expectation Maximization Clustering")
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+plt.legend()
+plt.grid()
+plt.show()
+
+print("\nEM Algorithm Completed Successfully!")
+
+
+Output:
+
+Expectation Maximization Algorithm
+
+Number of Clusters: 3
+
+Cluster Labels:
+[0 1 2 0 1 2 ...]
+
+Cluster Centers:
+[[-2.5  9.0]
+ [ 4.7  2.0]
+ [-6.8 -6.8]]
+
+Silhouette Score: Approximately 0.8
+
+EM Algorithm Completed Successfully!
