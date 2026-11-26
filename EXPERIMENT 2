@@ -1,0 +1,77 @@
+import pandas as pd
+
+data = {
+    'Sky': ['Sunny', 'Sunny', 'Rainy', 'Sunny'],
+    'AirTemp': ['Warm', 'Warm', 'Cold', 'Warm'],
+    'Humidity': ['Normal', 'High', 'High', 'High'],
+    'Wind': ['Strong', 'Strong', 'Strong', 'Strong'],
+    'Water': ['Warm', 'Warm', 'Warm', 'Cool'],
+    'Forecast': ['Same', 'Same', 'Change', 'Change'],
+    'EnjoySport': ['Yes', 'Yes', 'No', 'Yes']
+}
+
+df = pd.DataFrame(data)
+df.to_csv('training_data.csv', index=False)
+
+print("CSV File Created Successfully!")
+print(df)import pandas as pd
+
+# Read CSV file
+df = pd.read_csv('training_data.csv')
+
+X = df.iloc[:, :-1].values
+Y = df.iloc[:, -1].values
+
+num_attributes = len(X[0])
+
+# Initialize Specific and General Hypotheses
+S = ['0'] * num_attributes
+G = [['?'] * num_attributes]
+
+for i in range(len(X)):
+
+    if Y[i] == 'Yes':
+
+        # Remove inconsistent general hypotheses
+        G = [g for g in G if all(
+            g[j] == '?' or g[j] == X[i][j]
+            for j in range(num_attributes)
+        )]
+
+        for j in range(num_attributes):
+            if S[j] == '0':
+                S[j] = X[i][j]
+            elif S[j] != X[i][j]:
+                S[j] = '?'
+
+    else:
+        new_G = []
+
+        for g in G:
+            for j in range(num_attributes):
+                if g[j] == '?':
+                    if S[j] != '?' and S[j] != '0':
+                        h = g.copy()
+                        h[j] = S[j]
+
+                        if h not in new_G:
+                            new_G.append(h)
+
+        G = new_G
+
+print("\nFinal Specific Hypothesis (S):")
+print(S)
+
+print("\nFinal General Hypothesis (G):")
+for g in G:
+    print(g)
+
+Output:
+
+CSV File Created Successfully!
+
+Final Specific Hypothesis (S):
+['Sunny', 'Warm', '?', 'Strong', '?', '?']
+
+Final General Hypothesis (G):
+['Sunny', '?', '?', '?', '?', '?']
