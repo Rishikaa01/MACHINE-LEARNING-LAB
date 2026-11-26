@@ -1,0 +1,111 @@
+# Car Price Prediction using Linear Regression
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error, r2_score
+
+# Create Dataset
+data = {
+    'Year': [2015, 2016, 2017, 2018, 2019,
+             2020, 2021, 2015, 2017, 2019,
+             2020, 2021, 2016, 2018, 2022],
+
+    'Kilometers': [50000, 45000, 40000, 35000, 30000,
+                   25000, 20000, 60000, 42000, 28000,
+                   22000, 18000, 55000, 38000, 15000],
+
+    'Engine': [1000, 1200, 1200, 1500, 1500,
+               1800, 2000, 1000, 1200, 1500,
+               1800, 2000, 1200, 1500, 2000],
+
+    'Price': [300000, 350000, 400000, 500000, 600000,
+              750000, 900000, 280000, 420000, 620000,
+              780000, 950000, 330000, 520000, 1100000]
+}
+
+df = pd.DataFrame(data)
+
+print("Car Dataset:")
+print(df)
+
+# Input and Output
+X = df[['Year', 'Kilometers', 'Engine']]
+y = df['Price']
+
+# Split Dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Create Model
+model = LinearRegression()
+
+# Train Model
+model.fit(X_train, y_train)
+
+# Predict Prices
+y_pred = model.predict(X_test)
+
+# Display Results
+print("\nActual Car Prices:")
+print(y_test.values)
+
+print("\nPredicted Car Prices:")
+print(y_pred)
+
+# Model Evaluation
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print("\nMean Absolute Error:", mae)
+print("R2 Score:", r2)
+
+# Predict New Car Price
+new_car = pd.DataFrame({
+    'Year': [2022],
+    'Kilometers': [10000],
+    'Engine': [2000]
+})
+
+predicted_price = model.predict(new_car)
+
+print("\nPredicted New Car Price: Rs.", round(predicted_price[0], 2))
+
+# Visualization
+plt.figure(figsize=(8, 5))
+
+plt.scatter(y_test, y_pred, color='blue')
+
+plt.xlabel("Actual Car Price")
+plt.ylabel("Predicted Car Price")
+plt.title("Car Price Prediction")
+
+plt.grid()
+plt.show()
+
+print("\nCar Price Prediction Completed Successfully!")
+
+Output:
+
+Car Dataset:
+    Year  Kilometers  Engine    Price
+0   2015       50000    1000   300000
+1   2016       45000    1200   350000
+...
+
+Actual Car Prices:
+[750000 280000 600000]
+
+Predicted Car Prices:
+[... ... ...]
+
+Mean Absolute Error: ...
+
+R2 Score: ...
+
+Predicted New Car Price: Rs. ...
+
+Car Price Prediction Completed Successfully!
