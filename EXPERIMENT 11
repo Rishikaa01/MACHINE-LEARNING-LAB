@@ -1,0 +1,112 @@
+# Credit Score Classification using Random Forest
+
+import pandas as pd
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
+# Create Dataset
+data = {
+    'Age': [25, 35, 45, 23, 50, 40, 30, 55, 28, 48,
+            32, 60, 27, 42, 38, 52, 29, 46, 34, 58],
+
+    'Income': [25000, 50000, 80000, 20000, 90000,
+               65000, 40000, 100000, 30000, 85000,
+               45000, 110000, 28000, 70000, 55000,
+               95000, 35000, 75000, 48000, 105000],
+
+    'Loan': [10000, 20000, 15000, 12000, 10000,
+             25000, 30000, 12000, 18000, 15000,
+             22000, 10000, 25000, 18000, 20000,
+             12000, 28000, 16000, 24000, 10000],
+
+    'Payment_History': [1, 1, 1, 0, 1, 1, 0, 1, 0, 1,
+                        1, 1, 0, 1, 1, 1, 0, 1, 1, 1],
+
+    'Credit_Score': [
+        'Good', 'Good', 'Good', 'Poor', 'Good',
+        'Good', 'Poor', 'Good', 'Poor', 'Good',
+        'Good', 'Good', 'Poor', 'Good', 'Good',
+        'Good', 'Poor', 'Good', 'Good', 'Good'
+    ]
+}
+
+df = pd.DataFrame(data)
+
+print("Credit Score Dataset:")
+print(df)
+
+# Input and Output
+X = df.drop('Credit_Score', axis=1)
+y = df['Credit_Score']
+
+# Split Dataset
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# Create Random Forest Model
+model = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
+
+# Train Model
+model.fit(X_train, y_train)
+
+# Prediction
+y_pred = model.predict(X_test)
+
+# Display Results
+print("\nActual Values:")
+print(list(y_test))
+
+print("\nPredicted Values:")
+print(y_pred)
+
+# Accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+print("\nAccuracy:", accuracy * 100, "%")
+
+# Confusion Matrix
+print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, y_pred,
+                       labels=['Good', 'Poor']))
+
+# Classification Report
+print("\nClassification Report:")
+print(classification_report(y_test, y_pred))
+
+# Predict New Customer
+new_customer = pd.DataFrame({
+    'Age': [30],
+    'Income': [60000],
+    'Loan': [15000],
+    'Payment_History': [1]
+})
+
+prediction = model.predict(new_customer)
+
+print("\nNew Customer Credit Score:", prediction[0])
+
+print("\nCredit Score Classification Completed Successfully!")
+
+Output:
+
+Credit Score Dataset:
+
+Actual Values:
+['Good', 'Poor', 'Good', 'Good']
+
+Predicted Values:
+['Good' 'Poor' 'Good' 'Good']
+
+Accuracy: 100.0 %
+
+New Customer Credit Score: Good
+
+Credit Score Classification Completed Successfully!
